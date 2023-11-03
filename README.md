@@ -1,1 +1,1 @@
-# ristinolla
+# Ristinolla (Algoritmit ja tekoäly)
