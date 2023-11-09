@@ -1,6 +1,6 @@
 # Määrittelydokumentti
 
-Tavoitteena luoda tekoäly, jota vastaan voi pelata ristinollaa 5 x 5 -kokoisessa ruudukossa. 
+Tavoitteena luoda tekoäly, jota vastaan voi pelata ristinollaa 20 x 20 -kokoisessa ruudukossa, viiden rivi voittaa. 
 
 - Ohjelmointikielenä Python. En ole käyttänyt muita kieliä aiemmin.
 - Käytettävät algoritmit: minmax-algoritmi ja alpha-beta-karsinta
