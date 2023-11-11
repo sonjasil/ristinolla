@@ -5,24 +5,30 @@ class Siirto:
         self.pelilauta = Ruudukko()
 
     def tee_siirto(self):
+        virhe = "Koordinaatti väärässä muodossa"
         for i in range(400):
             self.pelilauta.tulosta_ruudukko()
             siirto = input("Valitse koordinaatit (esim. A1):")
             if len(siirto) != 2:
-                break
+                print(virhe)
+                continue
             if siirto[0] not in "ABCDEFGHIJKLMNOPQRSTabcdefghijklmnopqrst":
-                break
+                print(virhe)
+                continue
             if int(siirto[1]) not in range(1, 21):
-                break
+                print(virhe)
+                continue
             else:
-                sarake = ord(siirto[0].lower()) - 97
-                rivi = int(siirto[1]) - 1
+                paikka = self.muuta_koordinaateiksi(siirto)
                 if i % 2 == 0:
-                    self.pelilauta.ruudukko[rivi][sarake] = "X"
+                    self.pelilauta.ruudukko[paikka[1]][paikka[0]] = "X"
                 elif i % 2 != 0:
-                    self.pelilauta.ruudukko[rivi][sarake] = "O"
+                    self.pelilauta.ruudukko[paikka[1]][paikka[0]] = "O"
                 i += 1
-        print("Koordinaatti väärässä muodossa")
 
-peli = Siirto()
-peli.tee_siirto()
+    #def etsi_voittajaa(self, siirto):
+        
+    def muuta_koordinaateiksi(self, siirto):
+        sarake = ord(siirto[0].lower()) - 97
+        rivi = int(siirto[1]) - 1
+        return (sarake, rivi)
