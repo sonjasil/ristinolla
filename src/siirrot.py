@@ -61,6 +61,7 @@ class Siirto:
             print(diagonaali_i - k, diagonaali_j + k)
         if self.etsi_rivi(merkkijono3, pelaaja) != -1 or self.etsi_rivi(merkkijono4, pelaaja) != -1:
             return True
+        return False
 
     def etsi_rivi(self, merkit, pelaaja):
         voitto = pelaaja * 5
