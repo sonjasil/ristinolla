@@ -1,4 +1,4 @@
-from siirrot import Siirto
+from siirrot import Peli
 
-peli = Siirto()
-peli.tee_siirto()
+peli = Peli()
+peli.pelaa()
