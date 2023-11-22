@@ -97,9 +97,11 @@ class Peli:
         # arvot = {"X": 1, "O": -1}
 
         if self.etsi_voittajaa(self.siirto, "X"):
-            return -1
+            return -inf
         elif self.etsi_voittajaa(self.siirto, "O"):
-            return 1
+            return inf
+        elif syvyys == 0:
+            return 0
 
         if maksimoi:
             max_arvo = -inf
