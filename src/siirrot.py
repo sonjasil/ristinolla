@@ -5,20 +5,12 @@ class Peli:
     def __init__(self):
         self.pelilauta = Ruudukko()
         self.virhe = False
-        self.siirto = None
 
-    def tarkista_siirto(self, siirto):
+    def tarkista_siirto(self, rivi, sarake):
         self.virhe = False
-        viesti = "Koordinaatti väärässsä muodossa"
-        if len(siirto) > 3 or len(siirto) < 2:
+        if rivi not in range(1, 20) or sarake not in range(1, 20):
             self.virhe = True
-            print(viesti)
-        elif siirto[0] not in "ABCDEFGHIJKLMNOPQRSTabcdefghijklmnopqrst":
-            self.virhe = True
-            print(viesti)
-        elif siirto[1:] not in "1011121314151617181920" or int(siirto[1:]) not in range(1, 21):
-            self.virhe = True
-            print(viesti)
+            print("Väärä koordinaatti")
         return self.virhe
 
 
@@ -27,49 +19,47 @@ class Peli:
         while True:
             self.pelilauta.tulosta_ruudukko()
 
-            siirto = input("Valitse koordinaatit (esim. A1):")
-            if not self.tarkista_siirto(siirto):
-                self.siirto = self.muuta_koordinaateiksi(siirto)
-                if self.pelilauta.ruudukko[self.siirto[0]][self.siirto[1]] == "-":
-                    self.pelilauta.ruudukko[self.siirto[0]][self.siirto[1]] = "X"
-                    if self.etsi_voittajaa(self.siirto, "X"):
+            rivi = int(input(("Valitse rivi 1-20: ")))
+            sarake = int(input("Valitse sarake 1-20: "))
+            siirto = (rivi - 1, sarake - 1)
+            if not self.tarkista_siirto(rivi, sarake):
+                if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == "-":
+                    self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "X"
+                    if self.etsi_voittajaa(siirto, "X"):
+                        self.pelilauta.tulosta_ruudukko()
                         voittaja = "X"
                         break
 
-            self.siirto = self.paras_siirto()
+            ai_siirto = self.etsi_paras_siirto(siirto)
             print("Tietokoneen vuoro")
-            if self.pelilauta.ruudukko[self.siirto[0]][self.siirto[1]] == "-":
-                self.pelilauta.ruudukko[self.siirto[0]][self.siirto[1]] = "O"
-                if self.etsi_voittajaa(self.siirto, "O"):
+            if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
+                self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] = "O"
+                if self.etsi_voittajaa(ai_siirto, "O"):
+                    self.pelilauta.tulosta_ruudukko()
                     voittaja = "O"
                     break
 
         print(f"Voittaja on {voittaja}")
 
     def etsi_voittajaa(self, siirto, pelaaja):
-        koord = self.muuta_koordinaateiksi(siirto)
-        i = koord[0]
-        j = koord[1]
+        x = siirto[0]
+        y = siirto[1]
+        laskuri1 = 0
+        laskuri2 = 0
         ruudut = self.pelilauta.ruudukko
-        merkkijono1 = ""
-        merkkijono2 = ""
-        merkkijono3 = ""
-        merkkijono4 = ""
-        for x in range(20):
-            merkkijono1 += ruudut[x][j]
-        for y in range(20):
-            merkkijono2 += ruudut[i][y]
-        if self.etsi_rivi(merkkijono1, pelaaja) != -1 or self.etsi_rivi(merkkijono2, pelaaja) != -1:
-            return True
-        diagonaali_i = i - min(i, j)
-        diagonaali_j = j - min(i, j)
-        for k in range(20 - max(diagonaali_i, diagonaali_j)):
-            merkkijono3 += ruudut[diagonaali_i + k][diagonaali_j + k]
-        diagonaali_i = i + min(19 - i, j)
-        diagonaali_j = j - min(19 - i, j)
-        for k in range(20 - max(19 - diagonaali_i, diagonaali_j)):
-            merkkijono4 += ruudut[diagonaali_i - k][diagonaali_j + k]
-        if self.etsi_rivi(merkkijono3, pelaaja) != -1 or self.etsi_rivi(merkkijono4, pelaaja) != -1:
+        for i in range(max(0, x - 1), max(0, x - 4), -1):
+            print(f"1. s: i = {i}, x = {x}, y = {y}")
+            if ruudut[i][y] == ruudut[i + 1][y] and i != i + 1 and ruudut[i][y] == pelaaja:
+                laskuri1 += 1
+                print(f"laskuri1: {laskuri1}")
+        for i in range(min(0, x + 1), min(20, x + 4)):
+            print(f"2. s: i = {i}, x = {x}, y = {y}")
+            if ruudut[i][y] == ruudut[i - 1][y] and i != i - 1 and ruudut[i][y] == pelaaja:
+                laskuri2 += 1
+                print(f"laskuri2: {laskuri2}")
+        print(f"summa: {laskuri1 + laskuri2 + 1}")
+        input("Press Enter")
+        if laskuri1 + laskuri2 + 1 >= 5:
             return True
         return False
 
@@ -80,25 +70,13 @@ class Peli:
                 if self.pelilauta.ruudukko[i][j] == "-":
                     vapaat_ruudut.append((i, j))
         return vapaat_ruudut
-
-    def etsi_rivi(self, merkit, pelaaja):
-        voitto = pelaaja * 5
-        return merkit.find(voitto)
-
-    def muuta_koordinaateiksi(self, siirto):
-        try:
-            sarake = ord(siirto[0].lower()) - 97
-            rivi = int(siirto[1:]) - 1
-            return (rivi, sarake)
-        except:
-            return siirto
-
-    def minmax(self, pelilauta, syvyys, maksimoi):
+        
+    def minmax(self, pelilauta, siirto, syvyys, maksimoi):
         # arvot = {"X": 1, "O": -1}
 
-        if self.etsi_voittajaa(self.siirto, "X"):
+        if self.etsi_voittajaa(siirto, "X"):
             return -inf
-        elif self.etsi_voittajaa(self.siirto, "O"):
+        elif self.etsi_voittajaa(siirto, "O"):
             return inf
         elif syvyys == 0:
             return 0
@@ -121,13 +99,13 @@ class Peli:
                 min_arvo = min(min_arvo, arvo)
             return min_arvo
 
-    def paras_siirto(self):
+    def etsi_paras_siirto(self, edellinen_siirto):
         paras_arvo = -inf
         paras_siirto = None
 
         for i, j in self.vapaat_ruudut():
             self.pelilauta.ruudukko[i][j] = "O"
-            siirron_arvo = self.minmax(self.pelilauta.ruudukko, 0, False)
+            siirron_arvo = self.minmax(self.pelilauta.ruudukko, edellinen_siirto, 0, False)
             self.pelilauta.ruudukko[i][j] = "-"
 
             if siirron_arvo > paras_arvo:
