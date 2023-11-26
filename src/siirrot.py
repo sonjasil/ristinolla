@@ -88,7 +88,7 @@ class Peli:
             i = min(19, x + k)
             j = min(19, y + k)
             if ruudut[i][j] == pelaaja:
-                laskuri1 += 1
+                laskuri2 += 1
             else:
                 break
         if laskuri1 + laskuri2 + 1 >= 5:
@@ -108,7 +108,7 @@ class Peli:
             j = max(0, y - k)
             #print(i, j)
             if ruudut[i][j] == pelaaja:
-                laskuri1 += 1
+                laskuri2 += 1
             else:
                 break
         if laskuri1 + laskuri2 + 1 >= 5:
