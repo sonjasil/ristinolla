@@ -42,23 +42,55 @@ class Peli:
         print(f"Voittaja on {voittaja}")
 
     def etsi_voittajaa(self, siirto, pelaaja):
-        x = siirto[0]
-        y = siirto[1]
+        y = siirto[0]
+        x = siirto[1]
         laskuri1 = 0
         laskuri2 = 0
         ruudut = self.pelilauta.ruudukko
-        for i in range(max(0, x - 1), max(0, x - 4), -1):
-            print(f"1. s: i = {i}, x = {x}, y = {y}")
-            if ruudut[i][y] == ruudut[i + 1][y] and i != i + 1 and ruudut[i][y] == pelaaja:
+        for i in range(y - 1, max(-1, y - 5), -1):
+            if ruudut[i][x] == pelaaja:
                 laskuri1 += 1
-                print(f"laskuri1: {laskuri1}")
-        for i in range(min(0, x + 1), min(20, x + 4)):
-            print(f"2. s: i = {i}, x = {x}, y = {y}")
-            if ruudut[i][y] == ruudut[i - 1][y] and i != i - 1 and ruudut[i][y] == pelaaja:
+            else:
+                break
+        for i in range(y + 1, min(20, y + 5)):
+            if ruudut[i][x] == pelaaja:
                 laskuri2 += 1
-                print(f"laskuri2: {laskuri2}")
-        print(f"summa: {laskuri1 + laskuri2 + 1}")
-        input("Press Enter")
+            else:
+                break
+        if laskuri1 + laskuri2 + 1 >= 5:
+            return True
+        laskuri1 = 0
+        laskuri2 = 0
+        for j in range(x - 1, max(-1, x - 5), -1):
+            if ruudut[y][j] == pelaaja:
+                laskuri1 += 1
+            else:
+                break
+        for j in range(x + 1, min(20, x + 5)):
+            if ruudut[y][j] == pelaaja:
+                laskuri2 += 1
+            else:
+                break
+        if laskuri1 + laskuri2 + 1 >= 5:
+            return True
+        laskuri1 = 0
+        laskuri2 = 0
+        for i in range(y - 1, max(-1, y - 5), -1):
+            print(f"i: {i}")
+            for j in range(x - 1, max(-1, x - 5), -1):
+                print(f"j: {j}")
+                if ruudut[i][j] == pelaaja:
+                    laskuri1 += 1
+                    print(laskuri1)
+                else:
+                    break
+        for i in range(y + 1, min(20, y + 5)):
+            for j in range(x + 1, min(20, x + 5)):
+                if ruudut[i][j] == pelaaja:
+                    laskuri2 += 1
+                    #print(laskuri2)
+                else:
+                    break
         if laskuri1 + laskuri2 + 1 >= 5:
             return True
         return False
