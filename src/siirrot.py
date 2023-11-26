@@ -1,4 +1,5 @@
 from math import inf
+from random import randint
 from ruudukko import Ruudukko
 
 class Peli:
@@ -30,7 +31,8 @@ class Peli:
                         voittaja = "X"
                         break
 
-            ai_siirto = self.etsi_paras_siirto(siirto)
+            #ai_siirto = self.etsi_paras_siirto(siirto)
+            ai_siirto = (randint(0, 19), randint(0, 19))
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
                 self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] = "O"
@@ -75,22 +77,40 @@ class Peli:
             return True
         laskuri1 = 0
         laskuri2 = 0
-        for i in range(y - 1, max(-1, y - 5), -1):
-            print(f"i: {i}")
-            for j in range(x - 1, max(-1, x - 5), -1):
-                print(f"j: {j}")
-                if ruudut[i][j] == pelaaja:
-                    laskuri1 += 1
-                    print(laskuri1)
-                else:
-                    break
-        for i in range(y + 1, min(20, y + 5)):
-            for j in range(x + 1, min(20, x + 5)):
-                if ruudut[i][j] == pelaaja:
-                    laskuri2 += 1
-                    #print(laskuri2)
-                else:
-                    break
+        for k in range(1, 5):
+            i = max(0, x - k)
+            j = max(0, y - k)
+            if ruudut[i][j] == pelaaja:
+                laskuri1 += 1
+            else:
+                break
+        for k in range(1, 5):
+            i = min(19, x + k)
+            j = min(19, y + k)
+            if ruudut[i][j] == pelaaja:
+                laskuri1 += 1
+            else:
+                break
+        if laskuri1 + laskuri2 + 1 >= 5:
+            return True
+        laskuri1 = 0
+        laskuri2 = 0
+        for k in range(1, 5):
+            i = max(0, x - k)
+            j = min(19, y + k)
+            print(i, j)
+            if ruudut[i][j] == pelaaja:
+                laskuri1 += 1
+            else:
+                break
+        for k in range(1, 5):
+            i = min(19, x + k)
+            j = max(0, y - k)
+            #print(i, j)
+            if ruudut[i][j] == pelaaja:
+                laskuri1 += 1
+            else:
+                break
         if laskuri1 + laskuri2 + 1 >= 5:
             return True
         return False
