@@ -78,8 +78,8 @@ class Peli:
         laskuri1 = 0
         laskuri2 = 0
         for k in range(1, 5):
-            i = x - k
-            j = y - k
+            i = y - k
+            j = x - k
             if i < 0 or j < 0:
                 break
             if ruudut[i][j] == pelaaja:
@@ -87,8 +87,8 @@ class Peli:
             else:
                 break
         for k in range(1, 5):
-            i = x + k
-            j = y + k
+            i = y + k
+            j = x + k
             if i > 19 or j > 19:
                 break
             if ruudut[i][j] == pelaaja:
@@ -100,8 +100,9 @@ class Peli:
         laskuri1 = 0
         laskuri2 = 0
         for k in range(1, 5):
-            i = x - k
-            j = y + k
+            i = y - k
+            j = x + k
+            print(i, j)
             if i < 0 or j > 19:
                 break
             if ruudut[i][j] == pelaaja:
@@ -109,8 +110,8 @@ class Peli:
             else:
                 break
         for k in range(1, 5):
-            i = x + k
-            j = y - k
+            i = y + k
+            j = x - k
             if i > 19 or j < 0:
                 break
             if ruudut[i][j] == pelaaja:
