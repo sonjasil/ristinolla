@@ -9,6 +9,8 @@
 
 [Viikko 4](dokumentaatio/viikkoraportit/viikko4.md)
 
+[Viikko 5](dokumentaatio/viikkoraportit/viikko5.md)
+
 ## Käyttöohje
 
 [Linkki käyttöohjeeseen](dokumentaatio/kaytto.md)
