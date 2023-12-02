@@ -194,9 +194,9 @@ class Peli:
 
         if self.etsi_voittajaa(siirto, "X"):
             return -inf
-        elif self.etsi_voittajaa(siirto, "O"):
+        if self.etsi_voittajaa(siirto, "O"):
             return inf
-        elif syvyys == 0:
+        if syvyys == 0:
             return 0
 
         if maksimoi:
