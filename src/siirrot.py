@@ -41,6 +41,8 @@ class Peli:
                     break
 
             ai_siirto = self.etsi_paras_siirto(siirto, self.mahdolliset_siirrot)
+            self.etsi_mahdolliset_siirrot(ai_siirto)
+            print(self.mahdolliset_siirrot)
             #ai_siirto = (randint(0, 19), randint(0, 19))
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
@@ -235,4 +237,5 @@ class Peli:
                 paras_siirto = siirto
                 paras_arvo = siirron_arvo
 
+        print(paras_siirto)
         return paras_siirto
