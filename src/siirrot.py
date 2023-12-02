@@ -13,7 +13,7 @@ class Peli:
         if not rivi.isnumeric() or not sarake.isnumeric():
             self.virhe = True
             print("Väärä koordinaatti")
-        elif rivi not in range(1, 20) or sarake not in range(1, 20):
+        elif int(rivi) not in range(1, 20) or int(sarake) not in range(1, 20):
             self.virhe = True
             print("Väärä koordinaatti")
         return self.virhe
