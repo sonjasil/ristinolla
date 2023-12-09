@@ -7,6 +7,7 @@ class Peli:
         self.pelilauta = Ruudukko()
         self.virhe = False
         self.mahdolliset_siirrot = []
+        self.siirrot = 0
 
     def tarkista_siirto(self, rivi, sarake):
         self.virhe = False
@@ -21,7 +22,6 @@ class Peli:
 
     def pelaa(self):
         voittaja = None
-        siirrot = 0
         while True:
             self.pelilauta.tulosta_ruudukko()
 
@@ -34,7 +34,7 @@ class Peli:
             if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == "-":
                 self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "X"
                 self.etsi_mahdolliset_siirrot(siirto)
-                siirrot += 1
+                self.siirrot += 1
                 if self.etsi_voittajaa(siirto, "X"):
                     self.pelilauta.tulosta_ruudukko()
                     voittaja = "X"
@@ -46,7 +46,7 @@ class Peli:
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
                 self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] = "O"
                 siirrot += 1
-                if siirrot == 400:
+                if self.etsi_tasapeli(self.siirrot):
                     break
                 if self.etsi_voittajaa(ai_siirto, "O"):
                     self.pelilauta.tulosta_ruudukko()
@@ -60,44 +60,41 @@ class Peli:
     def etsi_voittajaa(self, siirto, pelaaja):
         rivi = siirto[0]
         sarake = siirto[1]
-        laskuri1 = 0
-        laskuri2 = 0
+        laskuri = 0
         ruudut = self.pelilauta.ruudukko
         for i in range(rivi - 1, max(-1, rivi - 5), -1):
             if ruudut[i][sarake] == pelaaja:
-                laskuri1 += 1
+                laskuri += 1
             else:
                 break
         for i in range(rivi + 1, min(20, rivi + 5)):
             if ruudut[i][sarake] == pelaaja:
-                laskuri2 += 1
+                laskuri += 1
             else:
                 break
-        if laskuri1 + laskuri2 + 1 >= 5:
+        if laskuri + 1 >= 5:
             return True
-        laskuri1 = 0
-        laskuri2 = 0
+        laskuri = 0
         for j in range(sarake - 1, max(-1, sarake - 5), -1):
             if ruudut[rivi][j] == pelaaja:
-                laskuri1 += 1
+                laskuri += 1
             else:
                 break
         for j in range(sarake + 1, min(20, sarake + 5)):
             if ruudut[rivi][j] == pelaaja:
-                laskuri2 += 1
+                laskuri += 1
             else:
                 break
-        if laskuri1 + laskuri2 + 1 >= 5:
+        if laskuri + 1 >= 5:
             return True
-        laskuri1 = 0
-        laskuri2 = 0
+        laskuri = 0
         for k in range(1, 5):
             i = rivi - k
             j = sarake - k
             if i < 0 or j < 0:
                 break
             if ruudut[i][j] == pelaaja:
-                laskuri1 += 1
+                laskuri += 1
             else:
                 break
         for k in range(1, 5):
@@ -106,20 +103,19 @@ class Peli:
             if i > 19 or j > 19:
                 break
             if ruudut[i][j] == pelaaja:
-                laskuri2 += 1
+                laskuri += 1
             else:
                 break
-        if laskuri1 + laskuri2 + 1 >= 5:
+        if laskuri + 1 >= 5:
             return True
-        laskuri1 = 0
-        laskuri2 = 0
+        laskuri = 0
         for k in range(1, 5):
             i = rivi - k
             j = sarake + k
             if i < 0 or j > 19:
                 break
             if ruudut[i][j] == pelaaja:
-                laskuri1 += 1
+                laskuri += 1
             else:
                 break
         for k in range(1, 5):
@@ -128,10 +124,10 @@ class Peli:
             if i > 19 or j < 0:
                 break
             if ruudut[i][j] == pelaaja:
-                laskuri2 += 1
+                laskuri += 1
             else:
                 break
-        if laskuri1 + laskuri2 + 1 >= 5:
+        if laskuri + 1 >= 5:
             return True
         return False
 
@@ -189,6 +185,11 @@ class Peli:
             if ruudut[i][j] == "-" and (i, j) not in self.mahdolliset_siirrot:
                 self.mahdolliset_siirrot.append((i, j))
 
+    def etsi_tasapeli(self, siirtomaara):
+        if siirtomaara == 400:
+            return True
+
+
     def minmax(self, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
         # arvot = {"X": 1, "O": -1}
 
@@ -197,6 +198,8 @@ class Peli:
         if self.etsi_voittajaa(siirto, "O"):
             return inf
         if syvyys == 0:
+            return 0
+        if self.etsi_tasapeli(self.siirrot):
             return 0
 
         if maksimoi:
