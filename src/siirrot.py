@@ -191,9 +191,9 @@ class Peli:
         if siirtomaara == 400:
             return True
         
-    def arvioi_siirto(self, siirto, pelaaja):
-        siirron_arvo = -inf
-        ruudut = self.pelilauta.ruudukko
+    def arvioi_siirto(self):
+        pass
+        
         
 
 
@@ -204,8 +204,9 @@ class Peli:
             return -inf
         if self.etsi_voittajaa(siirto, "O"):
             return inf
-        if syvyys == 0:
+        if syvyys == 0 :
             return 0
+            #return self.arvioi_siirto(siirto, "O")
         if self.etsi_tasapeli(self.siirrot):
             return 0
 
@@ -215,7 +216,7 @@ class Peli:
             for siirto_tuple in mahdolliset_siirrot:
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "O"
                 siirtolistan_kopio.append(siirto_tuple)
-                arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys + 1, False)
+                arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "-"
                 max_arvo = max(max_arvo, arvo)
             return max_arvo
@@ -226,7 +227,7 @@ class Peli:
             for siirto_tuple in mahdolliset_siirrot:
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "X"
                 siirtolistan_kopio.append(siirto_tuple)
-                arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys + 1, True)
+                arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "-"
                 min_arvo = min(min_arvo, arvo)
             return min_arvo
@@ -238,7 +239,7 @@ class Peli:
         for siirto in mahdolliset_siirrot:
             self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "O"
             siirron_arvo = \
-                self.minmax(self.pelilauta.ruudukko, edellinen_siirto, mahdolliset_siirrot, 0, False)
+                self.minmax(self.pelilauta.ruudukko, edellinen_siirto, mahdolliset_siirrot, 5, False)
             self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "-"
 
             if siirron_arvo > paras_arvo:
