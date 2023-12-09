@@ -212,7 +212,7 @@ class Peli:
 
         if maksimoi:
             max_arvo = -inf
-            siirtolistan_kopio = self.mahdolliset_siirrot
+            siirtolistan_kopio = mahdolliset_siirrot.copy()
             for siirto_tuple in mahdolliset_siirrot:
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "O"
                 siirtolistan_kopio.append(siirto_tuple)
@@ -223,7 +223,7 @@ class Peli:
 
         else:
             min_arvo = inf
-            siirtolistan_kopio = self.mahdolliset_siirrot
+            siirtolistan_kopio = mahdolliset_siirrot.copy()
             for siirto_tuple in mahdolliset_siirrot:
                 pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "X"
                 siirtolistan_kopio.append(siirto_tuple)
@@ -234,7 +234,7 @@ class Peli:
 
     def etsi_paras_siirto(self, edellinen_siirto, mahdolliset_siirrot):
         paras_arvo = -inf
-        paras_siirto = None
+        paras_siirto = (19, 19)
 
         for siirto in mahdolliset_siirrot:
             self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "O"
