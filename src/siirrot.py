@@ -45,7 +45,7 @@ class Peli:
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
                 self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] = "O"
-                siirrot += 1
+                self.siirrot += 1
                 if self.etsi_tasapeli(self.siirrot):
                     break
                 if self.etsi_voittajaa(ai_siirto, "O"):
@@ -188,6 +188,9 @@ class Peli:
     def etsi_tasapeli(self, siirtomaara):
         if siirtomaara == 400:
             return True
+        
+    def arvioi_siirto(self, siirto, pelaaja):
+        siirron_arvo = 0
 
 
     def minmax(self, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
