@@ -14,11 +14,13 @@ class Peli:
         if not rivi.isnumeric() or not sarake.isnumeric():
             self.virhe = True
             print("Väärä koordinaatti")
-        elif int(rivi) not in range(1, 20) or int(sarake) not in range(1, 20):
+        elif int(rivi) not in range(1, 21) or int(sarake) not in range(1, 21):
             self.virhe = True
             print("Väärä koordinaatti")
         return self.virhe
 
+    def tee_siirto(self, siirto, pelaaja):
+        self.pelilauta.ruudukko[siirto[0]][siirto[1]] = pelaaja
 
     def pelaa(self):
         voittaja = None
@@ -32,7 +34,7 @@ class Peli:
                     break
             siirto = (int(rivi) - 1, int(sarake) - 1)
             if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == "-":
-                self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "X"
+                self.tee_siirto(siirto, "X")
                 self.etsi_mahdolliset_siirrot(siirto)
                 self.siirrot += 1
                 if self.etsi_voittajaa(siirto, "X"):
@@ -44,7 +46,7 @@ class Peli:
             self.etsi_mahdolliset_siirrot(ai_siirto)
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
-                self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] = "O"
+                self.tee_siirto(ai_siirto, "O")
                 self.siirrot += 1
                 if self.etsi_tasapeli(self.siirrot):
                     break
@@ -190,7 +192,9 @@ class Peli:
             return True
         
     def arvioi_siirto(self, siirto, pelaaja):
-        siirron_arvo = 0
+        siirron_arvo = -inf
+        ruudut = self.pelilauta.ruudukko
+        
 
 
     def minmax(self, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
