@@ -1,6 +1,10 @@
 from math import inf
-#from random import randint
+from itertools import groupby
 from ruudukko import Ruudukko
+
+PLAYER = "X"
+COMPUTER = "O"
+EMPTY = "-"
 
 class Peli:
     def __init__(self):
@@ -34,10 +38,10 @@ class Peli:
                     break
             siirto = (int(rivi) - 1, int(sarake) - 1)
             if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == "-":
-                self.tee_siirto(siirto, "X")
+                self.tee_siirto(siirto, PLAYER)
                 self.etsi_mahdolliset_siirrot(siirto)
                 self.siirrot += 1
-                if self.etsi_voittajaa(siirto, "X"):
+                if self.etsi_voittajaa(siirto, PLAYER):
                     self.pelilauta.tulosta_ruudukko()
                     voittaja = "X"
                     break
@@ -46,11 +50,11 @@ class Peli:
             self.etsi_mahdolliset_siirrot(ai_siirto)
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
-                self.tee_siirto(ai_siirto, "O")
+                self.tee_siirto(ai_siirto, COMPUTER)
                 self.siirrot += 1
                 if self.etsi_tasapeli(self.siirrot):
                     break
-                if self.etsi_voittajaa(ai_siirto, "O"):
+                if self.etsi_voittajaa(ai_siirto, COMPUTER):
                     self.pelilauta.tulosta_ruudukko()
                     voittaja = "O"
                     break
@@ -191,44 +195,111 @@ class Peli:
         if siirtomaara == 400:
             return True
         
-    def arvioi_siirto(self):
-        pass
+    def arvioi_pelitilanne(self, pelilauta, siirto):
+        tilanteen_arvo = 0
+        pelaaja = COMPUTER
+        vastustaja = PLAYER
+        rivi = siirto[0]
+        sarake = siirto[1]
+        ruudut = pelilauta.ruudukko
+        merkit = ""
+
+        for j in range(max(0, sarake - 2), min(20, sarake + 3)):
+            merkit += ruudut[rivi][j]
+        print(f"vaaka: {merkit}")
+        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 100
+        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 70
+        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 70
+        if EMPTY + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 100
+        merkit = ""
+
+
+
+        for i in range(max(0, rivi - 2), min(20, rivi + 3)):
+            merkit += ruudut[i][sarake]
+        print(f"pysty: {merkit}")
+        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 100
+        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 70
+        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 70
+        if EMPTY + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 100
+        merkit = ""
+
+        i = rivi - min(rivi, sarake)
+        j = sarake - min(rivi, sarake)
+        for k in range(1, 3):
+            merkit += ruudut[i - k][j - k]
+        print(f"diag ylös: {merkit}")
+        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 100
+        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 70
+        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 70
+        if EMPTY + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 100
+        merkit = ""
+
+        i = min(sarake, 19 - rivi)
+        j = min(rivi, 19 - sarake)
+        for k in range(1, 3):
+            merkit += ruudut[i - k][j + k]
+        print(f" diag alas: {merkit}")
+        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 100
+        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+            tilanteen_arvo += 70
+        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 70
+        if EMPTY + vastustaja * 3 + EMPTY in merkit:
+            tilanteen_arvo -= 100
+
+        print(f"Rivi: {rivi}, sarake: {sarake}, pisteet: {tilanteen_arvo}")
+        return tilanteen_arvo
+
         
         
 
 
     def minmax(self, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
-        # arvot = {"X": 1, "O": -1}
 
-        if self.etsi_voittajaa(siirto, "X"):
+        if self.etsi_voittajaa(siirto, PLAYER):
             return -inf
-        if self.etsi_voittajaa(siirto, "O"):
+        if self.etsi_voittajaa(siirto, COMPUTER):
             return inf
-        if syvyys == 0 :
-            return 0
-            #return self.arvioi_siirto(siirto, "O")
+        if syvyys == 0:
+            return self.arvioi_pelitilanne(pelilauta, siirto)
         if self.etsi_tasapeli(self.siirrot):
             return 0
 
         if maksimoi:
             max_arvo = -inf
             siirtolistan_kopio = mahdolliset_siirrot.copy()
+            lauta_kopio = pelilauta.ruudukko.copy()
             for siirto_tuple in mahdolliset_siirrot:
-                pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "O"
+                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = COMPUTER
                 siirtolistan_kopio.append(siirto_tuple)
                 arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
-                pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "-"
+                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 max_arvo = max(max_arvo, arvo)
             return max_arvo
 
         else:
             min_arvo = inf
             siirtolistan_kopio = mahdolliset_siirrot.copy()
+            lauta_kopio = pelilauta.ruudukko.copy()
             for siirto_tuple in mahdolliset_siirrot:
-                pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "X"
+                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = PLAYER
                 siirtolistan_kopio.append(siirto_tuple)
                 arvo = self.minmax(pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
-                pelilauta[siirto_tuple[0]][siirto_tuple[1]] = "-"
+                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 min_arvo = min(min_arvo, arvo)
             return min_arvo
 
@@ -237,10 +308,10 @@ class Peli:
         paras_siirto = (19, 19)
 
         for siirto in mahdolliset_siirrot:
-            self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "O"
+            self.pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
-                self.minmax(self.pelilauta.ruudukko, edellinen_siirto, mahdolliset_siirrot, 5, False)
-            self.pelilauta.ruudukko[siirto[0]][siirto[1]] = "-"
+                self.minmax(self.pelilauta, edellinen_siirto, mahdolliset_siirrot, 1, False)
+            self.pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
                 paras_siirto = siirto
