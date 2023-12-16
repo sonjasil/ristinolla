@@ -1,5 +1,4 @@
 from math import inf
-from itertools import groupby
 from ruudukko import Ruudukko
 
 PLAYER = "X"
@@ -209,9 +208,9 @@ class Peli:
         print(f"vaaka: {merkit}")
         if EMPTY + pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -224,9 +223,9 @@ class Peli:
         print(f"pysty: {merkit}")
         if EMPTY + pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -239,9 +238,9 @@ class Peli:
         print(f"diag ylös: {merkit}")
         if EMPTY + pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -254,9 +253,9 @@ class Peli:
         print(f" diag alas: {merkit}")
         if EMPTY + pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 + vastustaja or vastustaja + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + pelaaja or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if EMPTY + vastustaja * 3 in merkit or vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -271,9 +270,9 @@ class Peli:
     def minmax(self, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
 
         if self.etsi_voittajaa(siirto, PLAYER):
-            return -inf
+            return -1000000
         if self.etsi_voittajaa(siirto, COMPUTER):
-            return inf
+            return 1000000
         if syvyys == 0:
             return self.arvioi_pelitilanne(pelilauta, siirto)
         if self.etsi_tasapeli(self.siirrot):
@@ -310,7 +309,7 @@ class Peli:
         for siirto in mahdolliset_siirrot:
             self.pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
-                self.minmax(self.pelilauta, edellinen_siirto, mahdolliset_siirrot, 1, False)
+                self.minmax(self.pelilauta, edellinen_siirto, mahdolliset_siirrot, 2, False)
             self.pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
