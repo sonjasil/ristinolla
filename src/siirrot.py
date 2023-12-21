@@ -47,7 +47,7 @@ class Peli:
                     voittaja = "X"
                     break
 
-            ai_siirto = self.etsi_paras_siirto(siirto, self.mahdolliset_siirrot, self.pelilauta)
+            ai_siirto = self.etsi_paras_siirto(self.mahdolliset_siirrot, self.pelilauta)
             self.etsi_mahdolliset_siirrot(ai_siirto, self.mahdolliset_siirrot)
             #print(self.mahdolliset_siirrot)
             print("Tietokoneen vuoro")
@@ -73,73 +73,74 @@ class Peli:
             ruudut = pelilauta.ruudukko
         except:
             ruudut = pelilauta
-        for i in range(rivi - 1, max(-1, rivi - 5), -1):
-            if ruudut[i][sarake] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for i in range(rivi + 1, min(20, rivi + 5)):
-            if ruudut[i][sarake] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        if laskuri + 1 >= 5:
-            return True
-        laskuri = 0
-        for j in range(sarake - 1, max(-1, sarake - 5), -1):
-            if ruudut[rivi][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for j in range(sarake + 1, min(20, sarake + 5)):
-            if ruudut[rivi][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        if laskuri + 1 >= 5:
-            return True
-        laskuri = 0
-        for k in range(1, 5):
-            i = rivi - k
-            j = sarake - k
-            if i < 0 or j < 0:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for k in range(1, 5):
-            i = rivi + k
-            j = sarake + k
-            if i > 19 or j > 19:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        if laskuri + 1 >= 5:
-            return True
-        laskuri = 0
-        for k in range(1, 5):
-            i = rivi - k
-            j = sarake + k
-            if i < 0 or j > 19:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for k in range(1, 5):
-            i = rivi + k
-            j = sarake - k
-            if i > 19 or j < 0:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        if laskuri + 1 >= 5:
-            return True
+        if ruudut[rivi][sarake] == pelaaja:
+            for i in range(rivi - 1, max(-1, rivi - 5), -1):
+                if ruudut[i][sarake] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            for i in range(rivi + 1, min(20, rivi + 5)):
+                if ruudut[i][sarake] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            if laskuri + 1 >= 5:
+                return True
+            laskuri = 0
+            for j in range(sarake - 1, max(-1, sarake - 5), -1):
+                if ruudut[rivi][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            for j in range(sarake + 1, min(20, sarake + 5)):
+                if ruudut[rivi][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            if laskuri + 1 >= 5:
+                return True
+            laskuri = 0
+            for k in range(1, 5):
+                i = rivi - k
+                j = sarake - k
+                if i < 0 or j < 0:
+                    break
+                if ruudut[i][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            for k in range(1, 5):
+                i = rivi + k
+                j = sarake + k
+                if i > 19 or j > 19:
+                    break
+                if ruudut[i][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            if laskuri + 1 >= 5:
+                return True
+            laskuri = 0
+            for k in range(1, 5):
+                i = rivi - k
+                j = sarake + k
+                if i < 0 or j > 19:
+                    break
+                if ruudut[i][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            for k in range(1, 5):
+                i = rivi + k
+                j = sarake - k
+                if i > 19 or j < 0:
+                    break
+                if ruudut[i][j] == pelaaja:
+                    laskuri += 1
+                else:
+                    break
+            if laskuri + 1 >= 5:
+                return True
         return False
 
     def etsi_mahdolliset_siirrot(self, siirto, mahdolliset_siirrot):
@@ -308,6 +309,82 @@ class Peli:
             #print(siirto, tilanteen_arvo)
             #print(self.mahdolliset_siirrot)
         return tilanteen_arvo
+    
+    def arvioi_pelitilanne2(self, pelilauta, siirto):
+        tilanteen_arvo = 0
+        pelaaja = COMPUTER
+        vastustaja = PLAYER
+        rivi = siirto[0]
+        sarake = siirto[1]
+        pelaajan_merkit  = 0
+        tyhjat_paikat = 0
+        try:
+            ruudut = pelilauta.ruudukko
+        except:
+            ruudut = pelilauta
+
+        for i in range(rivi - 1, max(-1, rivi - 5), -1):
+            if ruudut[i][sarake] == pelaaja:
+                pelaajan_merkit += 1
+            elif ruudut[i][sarake] == vastustaja:
+                break
+        for i in range(rivi + 1, min(20, rivi + 5)):
+            if ruudut[i][sarake] == pelaaja:
+                pelaajan_merkit += 1
+            else:
+                break
+          
+    
+        for j in range(sarake - 1, max(-1, sarake - 5), -1):
+            if ruudut[rivi][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+        for j in range(sarake + 1, min(20, sarake + 5)):
+            if ruudut[rivi][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+        
+        for k in range(1, 5):
+            i = rivi - k
+            j = sarake - k
+            if i < 0 or j < 0:
+                break
+            if ruudut[i][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+        for k in range(1, 5):
+            i = rivi + k
+            j = sarake + k
+            if i > 19 or j > 19:
+                break
+            if ruudut[i][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+    
+        for k in range(1, 5):
+            i = rivi - k
+            j = sarake + k
+            if i < 0 or j > 19:
+                break
+            if ruudut[i][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+        for k in range(1, 5):
+            i = rivi + k
+            j = sarake - k
+            if i > 19 or j < 0:
+                break
+            if ruudut[i][j] == pelaaja:
+                laskuri += 1
+            else:
+                break
+
+
 
     def alphabeta(self, a, b, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
 
@@ -357,7 +434,7 @@ class Peli:
                 b = min(b, min_arvo)
             return min_arvo
 
-    def etsi_paras_siirto(self, edellinen_siirto, mahdolliset_siirrot, pelilauta):
+    def etsi_paras_siirto(self, mahdolliset_siirrot, pelilauta):
         paras_arvo = -inf
         paras_siirto = choice(list(mahdolliset_siirrot))
 
@@ -366,6 +443,10 @@ class Peli:
                 self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, True)
 
             if siirron_arvo > paras_arvo:
+                paras_siirto = siirto
+                paras_arvo = siirron_arvo
+
+            elif siirron_arvo == -inf:
                 paras_siirto = siirto
                 paras_arvo = siirron_arvo
 
