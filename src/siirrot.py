@@ -211,25 +211,32 @@ class Peli:
             ruudut = pelilauta.ruudukko
         except:
             ruudut = pelilauta
+        try:
+            ruudut_ennen_siirtoa = pelilauta.ruudukko.copy()
+        except:
+            ruudut_ennen_siirtoa = pelilauta.copy()
+        ruudut_ennen_siirtoa[rivi][sarake] = "-"
         merkit = ""
+        merkit2 = ""
 
         for j in range(max(0, sarake - 4), min(20, sarake + 5)):
             merkit += ruudut[rivi][j]
+            merkit2 += ruudut_ennen_siirtoa[rivi][j]
         #if vastustaja in merkit:
             #print(f"vaaka: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
             tilanteen_arvo += 200
-        if EMPTY + pelaaja * 4 in merkit or pelaaja * 4 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
-        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 + EMPTY in merkit and EMPTY + pelaaja * 3 + EMPTY not in merkit2:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + EMPTY in merkit:
+        if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
-        if EMPTY + vastustaja * 4 in merkit or vastustaja * 4 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 150
-        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -237,69 +244,75 @@ class Peli:
             #print(merkit)
             #print(siirto, tilanteen_arvo)
         merkit = ""
+        merkit2 = ""
 
         for i in range(max(0, rivi - 4), min(20, rivi + 5)):
             merkit += ruudut[i][sarake]
+            merkit2 += ruudut[i][sarake]
         #print(f"pysty: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
             tilanteen_arvo += 200
-        if EMPTY + pelaaja * 4 in merkit or pelaaja * 4 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
-        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 + EMPTY in merkit and EMPTY + pelaaja * 3 + EMPTY not in merkit2:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + EMPTY in merkit:
+        if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
-        if EMPTY + vastustaja * 4 in merkit or vastustaja * 4 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 150
-        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
         merkit = ""
+        merkit2 = ""
 
         i = rivi - min(rivi, sarake)
         j = sarake - min(rivi, sarake)
         for k in range(1, 5):
             merkit += ruudut[i - k][j - k]
+            merkit2 += ruudut[i - k][j - k]
         #print(f"diag ylös: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
             tilanteen_arvo += 200
-        if EMPTY + pelaaja * 4 in merkit or pelaaja * 4 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
-        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 + EMPTY in merkit and EMPTY + pelaaja * 3 + EMPTY not in merkit2:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + EMPTY in merkit:
+        if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
-        if EMPTY + vastustaja * 4 in merkit or vastustaja * 4 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 150
-        if EMPTY + vastustaja * 3 + pelaaja in merkit or pelaaja + vastustaja * 3 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
         merkit = ""
+        merkit2 = ""
 
         i = min(sarake, 19 - rivi)
         j = min(rivi, 19 - sarake)
         for k in range(1, 5):
             merkit += ruudut[i - k][j + k]
+            merkit2 += ruudut[i - k][j + k]
         #print(f" diag alas: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
             tilanteen_arvo += 200
-        if EMPTY + pelaaja * 4 in merkit or pelaaja * 4 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
-        if EMPTY + pelaaja * 3 + EMPTY in merkit:
+        if EMPTY + pelaaja * 3 + EMPTY in merkit and EMPTY + pelaaja * 3 + EMPTY not in merkit2:
             tilanteen_arvo += 100
-        if EMPTY + pelaaja * 3 in merkit or pelaaja * 3 + EMPTY in merkit:
+        if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
-        if EMPTY + vastustaja * 4 + EMPTY in merkit:
+        if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
-        if EMPTY + vastustaja * 4 in merkit or vastustaja * 4 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 150
-        if EMPTY + vastustaja * 3 in merkit or vastustaja * 3 + EMPTY in merkit:
+        if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo -= 70
         if EMPTY + vastustaja * 3 + EMPTY in merkit:
             tilanteen_arvo -= 100
@@ -310,81 +323,6 @@ class Peli:
             #print(self.mahdolliset_siirrot)
         return tilanteen_arvo
     
-    def arvioi_pelitilanne2(self, pelilauta, siirto):
-        tilanteen_arvo = 0
-        pelaaja = COMPUTER
-        vastustaja = PLAYER
-        rivi = siirto[0]
-        sarake = siirto[1]
-        pelaajan_merkit  = 0
-        tyhjat_paikat = 0
-        try:
-            ruudut = pelilauta.ruudukko
-        except:
-            ruudut = pelilauta
-
-        for i in range(rivi - 1, max(-1, rivi - 5), -1):
-            if ruudut[i][sarake] == pelaaja:
-                pelaajan_merkit += 1
-            elif ruudut[i][sarake] == vastustaja:
-                break
-        for i in range(rivi + 1, min(20, rivi + 5)):
-            if ruudut[i][sarake] == pelaaja:
-                pelaajan_merkit += 1
-            else:
-                break
-          
-    
-        for j in range(sarake - 1, max(-1, sarake - 5), -1):
-            if ruudut[rivi][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for j in range(sarake + 1, min(20, sarake + 5)):
-            if ruudut[rivi][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        
-        for k in range(1, 5):
-            i = rivi - k
-            j = sarake - k
-            if i < 0 or j < 0:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for k in range(1, 5):
-            i = rivi + k
-            j = sarake + k
-            if i > 19 or j > 19:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-    
-        for k in range(1, 5):
-            i = rivi - k
-            j = sarake + k
-            if i < 0 or j > 19:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-        for k in range(1, 5):
-            i = rivi + k
-            j = sarake - k
-            if i > 19 or j < 0:
-                break
-            if ruudut[i][j] == pelaaja:
-                laskuri += 1
-            else:
-                break
-
-
 
     def alphabeta(self, a, b, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
 
