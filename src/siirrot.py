@@ -44,7 +44,7 @@ class Peli:
                 self.siirrot += 1
                 if self.etsi_voittajaa(siirto, PLAYER, self.pelilauta):
                     self.pelilauta.tulosta_ruudukko()
-                    voittaja = "X"
+                    voittaja = PLAYER
                     break
 
             ai_siirto = self.etsi_paras_siirto(self.mahdolliset_siirrot, self.pelilauta)
@@ -58,7 +58,7 @@ class Peli:
                     break
                 if self.etsi_voittajaa(ai_siirto, COMPUTER, self.pelilauta):
                     self.pelilauta.tulosta_ruudukko()
-                    voittaja = "O"
+                    voittaja = COMPUTER
                     break
         if voittaja is not None:
             print(f"Voittaja on {voittaja}")
@@ -147,8 +147,7 @@ class Peli:
         rivi = siirto[0]
         sarake = siirto[1]
         ruudut = self.pelilauta.ruudukko
-        if siirto in mahdolliset_siirrot:
-            mahdolliset_siirrot.remove(siirto)
+        
         for i in range(rivi - 1, max(-1, rivi - 3), -1):
             if ruudut[i][sarake] == "-":
                 mahdolliset_siirrot.add((i, sarake))
@@ -197,6 +196,9 @@ class Peli:
             if ruudut[i][j] == "-":
                 mahdolliset_siirrot.add((i, j))
 
+        if siirto in mahdolliset_siirrot:
+            mahdolliset_siirrot.remove(siirto)
+
     def etsi_tasapeli(self, siirtomaara):
         if siirtomaara == 400:
             return True
@@ -224,7 +226,7 @@ class Peli:
             merkit2 += ruudut_ennen_siirtoa[rivi][j]
         #if vastustaja in merkit:
             #print(f"vaaka: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo += 200
         if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
@@ -232,6 +234,10 @@ class Peli:
             tilanteen_arvo += 100
         if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
+        if EMPTY + pelaaja * 2 + EMPTY in merkit and EMPTY + pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 40
+        if (EMPTY + pelaaja * 2 in merkit and EMPTY + pelaaja * 2 not in merkit2) or pelaaja * 2 + EMPTY in merkit and pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 20
         if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
         if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
@@ -250,7 +256,7 @@ class Peli:
             merkit += ruudut[i][sarake]
             merkit2 += ruudut[i][sarake]
         #print(f"pysty: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo += 200
         if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
@@ -258,6 +264,10 @@ class Peli:
             tilanteen_arvo += 100
         if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
+        if EMPTY + pelaaja * 2 + EMPTY in merkit and EMPTY + pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 40
+        if (EMPTY + pelaaja * 2 in merkit and EMPTY + pelaaja * 2 not in merkit2) or pelaaja * 2 + EMPTY in merkit and pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 20
         if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
         if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
@@ -275,7 +285,7 @@ class Peli:
             merkit += ruudut[i - k][j - k]
             merkit2 += ruudut[i - k][j - k]
         #print(f"diag ylös: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo += 200
         if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
@@ -283,6 +293,10 @@ class Peli:
             tilanteen_arvo += 100
         if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
+        if EMPTY + pelaaja * 2 + EMPTY in merkit and EMPTY + pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 40
+        if (EMPTY + pelaaja * 2 in merkit and EMPTY + pelaaja * 2 not in merkit2) or pelaaja * 2 + EMPTY in merkit and pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 20
         if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
         if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
@@ -300,7 +314,7 @@ class Peli:
             merkit += ruudut[i - k][j + k]
             merkit2 += ruudut[i - k][j + k]
         #print(f" diag alas: {merkit}")
-        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 +EMPTY not in merkit2:
+        if EMPTY + pelaaja * 4 + EMPTY in merkit and EMPTY + pelaaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo += 200
         if (EMPTY + pelaaja * 4 in merkit and EMPTY + pelaaja * 4 not in merkit2) or (pelaaja * 4 + EMPTY in merkit and pelaaja * 4 + EMPTY not in merkit2):
             tilanteen_arvo += 150
@@ -308,6 +322,10 @@ class Peli:
             tilanteen_arvo += 100
         if (EMPTY + pelaaja * 3 in merkit and EMPTY + pelaaja * 3 not in merkit2) or (pelaaja * 3 + EMPTY in merkit and pelaaja * 3 + EMPTY not in merkit2):
             tilanteen_arvo += 70
+        if EMPTY + pelaaja * 2 + EMPTY in merkit and EMPTY + pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 40
+        if (EMPTY + pelaaja * 2 in merkit and EMPTY + pelaaja * 2 not in merkit2) or pelaaja * 2 + EMPTY in merkit and pelaaja * 2 + EMPTY not in merkit2:
+            tilanteen_arvo += 20
         if EMPTY + vastustaja * 4 + EMPTY in merkit and EMPTY + vastustaja * 4 + EMPTY not in merkit2:
             tilanteen_arvo -= 200
         if (EMPTY + vastustaja * 4 in merkit and EMPTY + vastustaja * 4 not in merkit2) or (vastustaja * 4 + EMPTY in merkit and vastustaja * 4 + EMPTY not in merkit2):
@@ -339,15 +357,11 @@ class Peli:
         if maksimoi:
             max_arvo = -inf
             siirtolistan_kopio = mahdolliset_siirrot.copy()
-            try:
-                lauta_kopio = pelilauta.ruudukko.copy()
-            except:
-                lauta_kopio = pelilauta.copy()
-            for siirto_tuple in mahdolliset_siirrot:
-                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = COMPUTER
-                self.etsi_mahdolliset_siirrot(siirto_tuple, siirtolistan_kopio)
-                arvo = self.alphabeta(a, b, lauta_kopio, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
-                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
+            self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
+            for siirto_tuple in siirtolistan_kopio:
+                pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = COMPUTER
+                arvo = self.alphabeta(a, b, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
+                pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 max_arvo = max(max_arvo, arvo)
                 if max_arvo > b:
                     break
@@ -357,15 +371,11 @@ class Peli:
         else:
             min_arvo = inf
             siirtolistan_kopio = mahdolliset_siirrot.copy()
-            try:
-                lauta_kopio = pelilauta.ruudukko.copy()
-            except:
-                lauta_kopio = pelilauta.copy()
-            for siirto_tuple in mahdolliset_siirrot:
-                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = PLAYER
-                self.etsi_mahdolliset_siirrot(siirto_tuple, siirtolistan_kopio)
-                arvo = self.alphabeta(a, b, lauta_kopio, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
-                lauta_kopio[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
+            self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
+            for siirto_tuple in siirtolistan_kopio:
+                pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = PLAYER
+                arvo = self.alphabeta(a, b, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
+                pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 min_arvo = min(min_arvo, arvo)
                 if min_arvo < a:
                     break
@@ -377,14 +387,12 @@ class Peli:
         paras_siirto = choice(list(mahdolliset_siirrot))
 
         for siirto in mahdolliset_siirrot:
+            pelilauta.ruudukko[siirto[0]][siirto[1]] == COMPUTER
             siirron_arvo = \
-                self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, True)
+                self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, False)
+            pelilauta.ruudukko[siirto[0]][siirto[1]] == "-"
 
             if siirron_arvo > paras_arvo:
-                paras_siirto = siirto
-                paras_arvo = siirron_arvo
-
-            elif siirron_arvo == -inf:
                 paras_siirto = siirto
                 paras_arvo = siirron_arvo
 
