@@ -68,10 +68,8 @@ class Peli:
         rivi = siirto[0]
         sarake = siirto[1]
         laskuri = 0
-        try:
-            ruudut = pelilauta.ruudukko
-        except:
-            ruudut = pelilauta
+        ruudut = pelilauta.ruudukko
+
         if ruudut[rivi][sarake] == pelaaja:
             for i in range(rivi - 1, max(-1, rivi - 5), -1):
                 if ruudut[i][sarake] == pelaaja:
@@ -146,7 +144,7 @@ class Peli:
         rivi = siirto[0]
         sarake = siirto[1]
         ruudut = self.pelilauta.ruudukko
-        
+
         for i in range(rivi - 1, max(-1, rivi - 3), -1):
             if ruudut[i][sarake] == EMPTY:
                 mahdolliset_siirrot.add((i, sarake))
@@ -202,7 +200,8 @@ class Peli:
     def etsi_tasapeli(self, siirtomaara):
         if siirtomaara == 400:
             return True
-        
+        return False
+
     def arvioi_osan_arvo(self, osa, pelaaja):
         osan_arvo = 0
         vastustaja = PLAYER if pelaaja == COMPUTER else COMPUTER
@@ -217,16 +216,13 @@ class Peli:
             osan_arvo += 10 * vastustajan_merkit * -1 + 10 * tyhjat_merkit
 
         return osan_arvo
-        
+
     def arvioi_pelitilanne(self, pelilauta, siirto, pelaaja):
         tilanteen_arvo = 0
         rivi = siirto[0]
         sarake = siirto[1]
-        try:
-            ruudut = pelilauta.ruudukko
-        except:
-            ruudut = pelilauta
-        
+        ruudut = pelilauta.ruudukko
+
         for i in range(5):
             alku = sarake - i
             loppu = alku + 5
@@ -273,10 +269,9 @@ class Peli:
                     osa.append(ruudut[r][s])
             #print(osa)
             tilanteen_arvo += self.arvioi_osan_arvo(osa, pelaaja)
-        
+
         #print(siirto, tilanteen_arvo)
         return tilanteen_arvo
-
 
     def alphabeta(self, alpha, beta, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi, pelaaja):
 
