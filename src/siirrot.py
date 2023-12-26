@@ -36,7 +36,7 @@ class Peli:
                 if not self.tarkista_siirto(rivi, sarake):
                     break
             siirto = (int(rivi) - 1, int(sarake) - 1)
-            if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == "-":
+            if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == EMPTY:
                 self.tee_siirto(siirto, PLAYER)
                 self.etsi_mahdolliset_siirrot(siirto, self.mahdolliset_siirrot)
                 #print(self.mahdolliset_siirrot)
@@ -50,7 +50,7 @@ class Peli:
             self.etsi_mahdolliset_siirrot(ai_siirto, self.mahdolliset_siirrot)
             #print(self.mahdolliset_siirrot)
             print("Tietokoneen vuoro")
-            if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == "-":
+            if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == EMPTY:
                 self.tee_siirto(ai_siirto, COMPUTER)
                 self.siirrot += 1
                 if self.etsi_tasapeli(self.siirrot):
@@ -148,19 +148,19 @@ class Peli:
         ruudut = self.pelilauta.ruudukko
         
         for i in range(rivi - 1, max(-1, rivi - 3), -1):
-            if ruudut[i][sarake] == "-":
+            if ruudut[i][sarake] == EMPTY:
                 mahdolliset_siirrot.add((i, sarake))
 
         for i in range(rivi + 1, min(20, rivi + 3)):
-            if ruudut[i][sarake] == "-":
+            if ruudut[i][sarake] == EMPTY:
                 mahdolliset_siirrot.add((i, sarake))
 
         for j in range(sarake - 1, max(-1, sarake - 3), -1):
-            if ruudut[rivi][j] == "-":
+            if ruudut[rivi][j] == EMPTY:
                 mahdolliset_siirrot.add((rivi, j))
 
         for j in range(sarake + 1, min(20, sarake + 3)):
-            if ruudut[rivi][j] == "-":
+            if ruudut[rivi][j] == EMPTY:
                 mahdolliset_siirrot.add((rivi, j))
 
         for k in range(1, 3):
@@ -168,7 +168,7 @@ class Peli:
             j = sarake - k
             if i < 0 or j < 0:
                 break
-            if ruudut[i][j] == "-":
+            if ruudut[i][j] == EMPTY:
                 mahdolliset_siirrot.add((i, j))
 
         for k in range(1, 3):
@@ -176,7 +176,7 @@ class Peli:
             j = sarake + k
             if i > 19 or j > 19:
                 break
-            if ruudut[i][j] == "-":
+            if ruudut[i][j] == EMPTY:
                 mahdolliset_siirrot.add((i, j))
 
         for k in range(1, 3):
@@ -184,7 +184,7 @@ class Peli:
             j = sarake + k
             if i < 0 or j > 19:
                 break
-            if ruudut[i][j] == "-":
+            if ruudut[i][j] == EMPTY:
                 mahdolliset_siirrot.add((i, j))
 
         for k in range(1, 3):
@@ -192,7 +192,7 @@ class Peli:
             j = sarake - k
             if i > 19 or j < 0:
                 break
-            if ruudut[i][j] == "-":
+            if ruudut[i][j] == EMPTY:
                 mahdolliset_siirrot.add((i, j))
 
         if siirto in mahdolliset_siirrot:
@@ -323,10 +323,10 @@ class Peli:
         paras_siirto = choice(list(mahdolliset_siirrot))
 
         for siirto in mahdolliset_siirrot:
-            pelilauta.ruudukko[siirto[0]][siirto[1]] == COMPUTER
+            pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
                 self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, False, PLAYER)
-            pelilauta.ruudukko[siirto[0]][siirto[1]] == "-"
+            pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
                 paras_siirto = siirto
