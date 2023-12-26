@@ -202,22 +202,44 @@ class Peli:
             return True
         return False
 
-    def arvioi_osan_arvo(self, osa, pelaaja):
+    def arvioi_osan_arvo(self, osa):
         osan_arvo = 0
-        vastustaja = PLAYER if pelaaja == COMPUTER else COMPUTER
+        pelaaja = COMPUTER
+        vastustaja = PLAYER
 
         pelaajan_merkit = osa.count(pelaaja)
         vastustajan_merkit = osa.count(vastustaja)
         tyhjat_merkit = osa.count(EMPTY)
 
-        if pelaajan_merkit != 0:
-            osan_arvo += 10 * pelaajan_merkit + 10 * tyhjat_merkit
-        elif vastustajan_merkit != 0:
-            osan_arvo += 10 * vastustajan_merkit * -1 + 10 * tyhjat_merkit
+        if pelaajan_merkit == 4 and tyhjat_merkit == 1:
+            osan_arvo += 300
+        elif vastustajan_merkit == 4 and pelaajan_merkit == 1:
+            osan_arvo += 250
+        elif pelaajan_merkit == 3 and tyhjat_merkit == 2:
+            osan_arvo += 200
+        elif vastustajan_merkit == 3 and pelaajan_merkit == 2:
+            osan_arvo += 350
+        elif pelaajan_merkit == 3 and tyhjat_merkit == 1:
+            osan_arvo += 150
+        elif pelaajan_merkit == 2 and tyhjat_merkit == 3:
+            osan_arvo += 100
+        elif pelaajan_merkit == 2 and tyhjat_merkit < 3:
+            osan_arvo += 50
+
+        if vastustajan_merkit == 4 and tyhjat_merkit == 1:
+            osan_arvo -= 400
+        elif vastustajan_merkit == 3 and tyhjat_merkit == 2:
+            osan_arvo -= 300
+        elif vastustajan_merkit == 3 and tyhjat_merkit == 1:
+            osan_arvo -= 250
+        elif vastustajan_merkit == 2 and tyhjat_merkit == 3:
+            osan_arvo -= 200
+        elif vastustajan_merkit == 2 and tyhjat_merkit < 3:
+            osan_arvo -= 150
 
         return osan_arvo
 
-    def arvioi_pelitilanne(self, pelilauta, siirto, pelaaja):
+    def arvioi_pelitilanne(self, pelilauta, siirto):
         tilanteen_arvo = 0
         rivi = siirto[0]
         sarake = siirto[1]
@@ -230,7 +252,7 @@ class Peli:
                 break
             osa = ruudut[rivi][alku:loppu]
             #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa, pelaaja)
+            tilanteen_arvo += self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alku = rivi - i
@@ -241,7 +263,7 @@ class Peli:
             for r in range(alku, loppu):
                 osa.append(ruudut[r][sarake])
             #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa, pelaaja)
+            tilanteen_arvo += self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alkurivi = rivi - i
@@ -254,7 +276,7 @@ class Peli:
             for r in range(alkurivi, loppurivi):
                 for s in range(alkusarake, loppusarake):
                     osa.append(ruudut[r][s])
-            tilanteen_arvo += self.arvioi_osan_arvo(osa, pelaaja)
+            tilanteen_arvo += self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alkurivi = rivi + i
@@ -268,19 +290,19 @@ class Peli:
                 for s in range(alkusarake, loppusarake):
                     osa.append(ruudut[r][s])
             #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa, pelaaja)
+            tilanteen_arvo += self.arvioi_osan_arvo(osa)
 
         #print(siirto, tilanteen_arvo)
         return tilanteen_arvo
 
-    def alphabeta(self, alpha, beta, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi, pelaaja):
+    def alphabeta(self, alpha, beta, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
 
         if self.etsi_voittajaa(siirto, PLAYER, pelilauta):
             return -inf
         if self.etsi_voittajaa(siirto, COMPUTER, pelilauta):
             return inf
         if syvyys == 0:
-            return self.arvioi_pelitilanne(pelilauta, siirto, pelaaja)
+            return self.arvioi_pelitilanne(pelilauta, siirto)
         if self.etsi_tasapeli(self.siirrot):
             return 0
 
@@ -291,7 +313,7 @@ class Peli:
             self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
             for siirto_tuple in siirtolistan_kopio:
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = COMPUTER
-                arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False, PLAYER)
+                arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 max_arvo = max(max_arvo, arvo)
                 if max_arvo > beta:
@@ -305,7 +327,7 @@ class Peli:
             self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
             for siirto_tuple in siirtolistan_kopio:
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = PLAYER
-                arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True, COMPUTER)
+                arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
                 min_arvo = min(min_arvo, arvo)
                 if min_arvo < alpha:
@@ -320,7 +342,7 @@ class Peli:
         for siirto in mahdolliset_siirrot:
             pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
-                self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, False, PLAYER)
+                self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, False)
             pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
