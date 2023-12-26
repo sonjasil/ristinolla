@@ -24,6 +24,7 @@ class Peli:
 
     def tee_siirto(self, siirto, pelaaja):
         self.pelilauta.ruudukko[siirto[0]][siirto[1]] = pelaaja
+        self.siirrot += 1
 
     def pelaa(self):
         voittaja = None
@@ -39,8 +40,6 @@ class Peli:
             if self.pelilauta.ruudukko[siirto[0]][siirto[1]] == EMPTY:
                 self.tee_siirto(siirto, PLAYER)
                 self.etsi_mahdolliset_siirrot(siirto, self.mahdolliset_siirrot)
-                #print(self.mahdolliset_siirrot)
-                self.siirrot += 1
                 if self.etsi_voittajaa(siirto, PLAYER, self.pelilauta):
                     self.pelilauta.tulosta_ruudukko()
                     voittaja = PLAYER
@@ -48,11 +47,9 @@ class Peli:
 
             ai_siirto = self.etsi_paras_siirto(self.mahdolliset_siirrot, self.pelilauta)
             self.etsi_mahdolliset_siirrot(ai_siirto, self.mahdolliset_siirrot)
-            #print(self.mahdolliset_siirrot)
             print("Tietokoneen vuoro")
             if self.pelilauta.ruudukko[ai_siirto[0]][ai_siirto[1]] == EMPTY:
                 self.tee_siirto(ai_siirto, COMPUTER)
-                self.siirrot += 1
                 if self.etsi_tasapeli(self.siirrot):
                     break
                 if self.etsi_voittajaa(ai_siirto, COMPUTER, self.pelilauta):
@@ -211,30 +208,30 @@ class Peli:
         vastustajan_merkit = osa.count(vastustaja)
         tyhjat_merkit = osa.count(EMPTY)
 
-        if pelaajan_merkit == 4 and tyhjat_merkit == 1:
-            osan_arvo += 300
-        elif vastustajan_merkit == 4 and pelaajan_merkit == 1:
-            osan_arvo += 250
-        elif pelaajan_merkit == 3 and tyhjat_merkit == 2:
-            osan_arvo += 200
-        elif vastustajan_merkit == 3 and pelaajan_merkit == 2:
-            osan_arvo += 350
-        elif pelaajan_merkit == 3 and tyhjat_merkit == 1:
+        if pelaajan_merkit == 4:
+            osan_arvo += 3000
+        if vastustajan_merkit == 4 and pelaajan_merkit == 1:
+            osan_arvo += 2500
+        if pelaajan_merkit == 3 and tyhjat_merkit == 2:
+            osan_arvo += 2000
+        if vastustajan_merkit == 3 and pelaajan_merkit >= 1:
+            osan_arvo += 3500
+        if pelaajan_merkit == 3 and tyhjat_merkit == 1:
             osan_arvo += 150
-        elif pelaajan_merkit == 2 and tyhjat_merkit == 3:
+        if pelaajan_merkit == 2 and tyhjat_merkit == 3:
             osan_arvo += 100
-        elif pelaajan_merkit == 2 and tyhjat_merkit < 3:
+        if pelaajan_merkit == 2 and tyhjat_merkit < 3:
             osan_arvo += 50
 
         if vastustajan_merkit == 4 and tyhjat_merkit == 1:
             osan_arvo -= 400
-        elif vastustajan_merkit == 3 and tyhjat_merkit == 2:
+        if vastustajan_merkit == 3 and tyhjat_merkit == 2:
             osan_arvo -= 300
-        elif vastustajan_merkit == 3 and tyhjat_merkit == 1:
+        if vastustajan_merkit == 3 and tyhjat_merkit == 1:
             osan_arvo -= 250
-        elif vastustajan_merkit == 2 and tyhjat_merkit == 3:
+        if vastustajan_merkit == 2 and tyhjat_merkit == 3:
             osan_arvo -= 200
-        elif vastustajan_merkit == 2 and tyhjat_merkit < 3:
+        if vastustajan_merkit == 2 and tyhjat_merkit < 3:
             osan_arvo -= 150
 
         return osan_arvo
@@ -251,8 +248,8 @@ class Peli:
             if alku < 0 or loppu > 19:
                 break
             osa = ruudut[rivi][alku:loppu]
-            #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa)
+            if self.arvioi_osan_arvo(osa) > tilanteen_arvo:
+                tilanteen_arvo = self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alku = rivi - i
@@ -262,37 +259,39 @@ class Peli:
             osa = []
             for r in range(alku, loppu):
                 osa.append(ruudut[r][sarake])
-            #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa)
+            if self.arvioi_osan_arvo(osa) > tilanteen_arvo:
+                tilanteen_arvo = self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alkurivi = rivi - i
-            loppurivi = alkurivi + 5
             alkusarake = sarake - i
-            loppusarake = alkusarake + 5
-            if alkurivi < 0 or alkusarake < 0 or loppurivi > 19 or loppusarake > 19:
+            if alkurivi < 0 or alkusarake < 0:
                 break
             osa = []
-            for r in range(alkurivi, loppurivi):
-                for s in range(alkusarake, loppusarake):
-                    osa.append(ruudut[r][s])
-            tilanteen_arvo += self.arvioi_osan_arvo(osa)
+            for k in range(5):
+                r = alkurivi + k
+                s = alkusarake + k
+                if r > 19 or s > 19:
+                    break
+                osa.append(ruudut[r][s])
+            if self.arvioi_osan_arvo(osa) > tilanteen_arvo:
+                tilanteen_arvo = self.arvioi_osan_arvo(osa)
 
         for i in range(5):
             alkurivi = rivi + i
-            loppurivi = alkurivi - 5
             alkusarake = sarake - i
-            loppusarake = alkusarake + 5
             osa = []
-            if alkurivi > 19 or loppurivi < 0 or alkusarake < 0 or loppusarake > 19:
+            if alkurivi > 19 or alkusarake < 0:
                 break
-            for r in range(alkurivi, loppurivi):
-                for s in range(alkusarake, loppusarake):
-                    osa.append(ruudut[r][s])
-            #print(osa)
-            tilanteen_arvo += self.arvioi_osan_arvo(osa)
+            for k in range(5):
+                r = alkurivi - k
+                s = alkusarake + k
+                if r < 0 or s > 19:
+                    break
+                osa.append(ruudut[r][s])
+            if self.arvioi_osan_arvo(osa) > tilanteen_arvo:
+                tilanteen_arvo = self.arvioi_osan_arvo(osa)
 
-        #print(siirto, tilanteen_arvo)
         return tilanteen_arvo
 
     def alphabeta(self, alpha, beta, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
@@ -348,6 +347,5 @@ class Peli:
             if siirron_arvo > paras_arvo:
                 paras_siirto = siirto
                 paras_arvo = siirron_arvo
-                #print(paras_siirto, paras_arvo)
 
         return paras_siirto
