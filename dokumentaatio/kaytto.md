@@ -15,5 +15,6 @@ poetry run invoke start
 ```
 
 ## Käyttöohje
+Peli on perinteinen ristinolla 20x20-ruudukolla. Viiden rivi vaaka-, pysty- tai vinosuuntaan voittaa. Pelaaja pelaa merkillä X.
 
-Sovellus pyytää pelaajan syöttämään rivin ja sarakkeen erikseen. Molempien tulee olla numero välillä 1-20. Tällä hetkellä ohjelmassa on bugi, jonka takia vuoron menettää, jos koordinaatin antaa väärässä muodossa. Tämä on tarkoitus korjata.
+Sovellus pyytää pelaajan syöttämään rivin ja sarakkeen erikseen. Molempien tulee olla numero välillä 1-20. Jos syöte on vääränlainen, pyydetään se uudestaan. Jos syötetty kohta ei ole tyhjä, vuoro jää välistä.
