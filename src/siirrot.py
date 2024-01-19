@@ -308,9 +308,9 @@ class Peli:
 
         if maksimoi:
             max_arvo = -inf
-            siirtolistan_kopio = mahdolliset_siirrot.copy()
-            self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
-            for siirto_tuple in siirtolistan_kopio:
+            for siirto_tuple in mahdolliset_siirrot:
+                siirtolistan_kopio = mahdolliset_siirrot.copy()
+                self.etsi_mahdolliset_siirrot(siirto_tuple, siirtolistan_kopio)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = COMPUTER
                 arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, False)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
@@ -322,9 +322,9 @@ class Peli:
 
         else:
             min_arvo = inf
-            siirtolistan_kopio = mahdolliset_siirrot.copy()
-            self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
-            for siirto_tuple in siirtolistan_kopio:
+            for siirto_tuple in mahdolliset_siirrot:
+                siirtolistan_kopio = mahdolliset_siirrot.copy()
+                self.etsi_mahdolliset_siirrot(siirto_tuple, siirtolistan_kopio)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = PLAYER
                 arvo = self.alphabeta(alpha, beta, pelilauta, siirto_tuple, siirtolistan_kopio, syvyys - 1, True)
                 pelilauta.ruudukko[siirto_tuple[0]][siirto_tuple[1]] = EMPTY
