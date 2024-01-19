@@ -9,7 +9,7 @@ EMPTY = "-"
 class Peli:
     def __init__(self):
         self.pelilauta = Ruudukko()
-        self.mahdolliset_siirrot = set()
+        self.mahdolliset_siirrot = []
         self.siirrot = 0
 
     def tarkista_siirto(self, rivi, sarake):
@@ -30,7 +30,7 @@ class Peli:
         voittaja = None
         while True:
             self.pelilauta.tulosta_ruudukko()
-            print(self.mahdolliset_siirrot)
+            #print(self.mahdolliset_siirrot)
 
             while True:
                 rivi = input(("Valitse rivi 1-20: "))
@@ -144,52 +144,52 @@ class Peli:
         ruudut = self.pelilauta.ruudukko
 
         for i in range(rivi - 1, max(-1, rivi - 3), -1):
-            if ruudut[i][sarake] == EMPTY:
-                mahdolliset_siirrot.add((i, sarake))
+            if ruudut[i][sarake] == EMPTY and ruudut[i][sarake] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, sarake))
 
         for i in range(rivi + 1, min(20, rivi + 3)):
-            if ruudut[i][sarake] == EMPTY:
-                mahdolliset_siirrot.add((i, sarake))
+            if ruudut[i][sarake] == EMPTY and ruudut[i][sarake] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, sarake))
 
         for j in range(sarake - 1, max(-1, sarake - 3), -1):
-            if ruudut[rivi][j] == EMPTY:
-                mahdolliset_siirrot.add((rivi, j))
+            if ruudut[rivi][j] == EMPTY and ruudut[rivi][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((rivi, j))
 
         for j in range(sarake + 1, min(20, sarake + 3)):
-            if ruudut[rivi][j] == EMPTY:
-                mahdolliset_siirrot.add((rivi, j))
+            if ruudut[rivi][j] == EMPTY and ruudut[rivi][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((rivi, j))
 
         for k in range(1, 3):
             i = rivi - k
             j = sarake - k
             if i < 0 or j < 0:
                 break
-            if ruudut[i][j] == EMPTY:
-                mahdolliset_siirrot.add((i, j))
+            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
             i = rivi + k
             j = sarake + k
             if i > 19 or j > 19:
                 break
-            if ruudut[i][j] == EMPTY:
-                mahdolliset_siirrot.add((i, j))
+            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
             i = rivi - k
             j = sarake + k
             if i < 0 or j > 19:
                 break
-            if ruudut[i][j] == EMPTY:
-                mahdolliset_siirrot.add((i, j))
+            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
             i = rivi + k
             j = sarake - k
             if i > 19 or j < 0:
                 break
-            if ruudut[i][j] == EMPTY:
-                mahdolliset_siirrot.add((i, j))
+            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+                mahdolliset_siirrot.append((i, j))
 
         if siirto in mahdolliset_siirrot:
             mahdolliset_siirrot.remove(siirto)
@@ -303,7 +303,8 @@ class Peli:
             if self.etsi_tasapeli(self.siirrot):
                 return 0
             if syvyys == 0:
-                return self.arvioi_pelitilanne(pelilauta, siirto)
+                return 0
+                #return self.arvioi_pelitilanne(pelilauta, siirto)
             max_arvo = -inf
             for siirto_tuple in mahdolliset_siirrot:
                 siirtolistan_kopio = mahdolliset_siirrot.copy()
@@ -323,7 +324,8 @@ class Peli:
             if self.etsi_tasapeli(self.siirrot):
                 return 0
             if syvyys == 0:
-                return self.arvioi_pelitilanne(pelilauta, siirto)
+                return 0
+                #return self.arvioi_pelitilanne(pelilauta, siirto)
             min_arvo = inf
             for siirto_tuple in mahdolliset_siirrot:
                 siirtolistan_kopio = mahdolliset_siirrot.copy()
@@ -346,7 +348,7 @@ class Peli:
             self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
             pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
-                self.alphabeta(-inf, inf, pelilauta, siirto, siirtolistan_kopio, 2, False)
+                self.alphabeta(-inf, inf, pelilauta, siirto, siirtolistan_kopio, 3, False)
             pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
