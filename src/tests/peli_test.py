@@ -115,4 +115,4 @@ class TestPeli(unittest.TestCase):
 
         paras_siirto = peli.etsi_paras_siirto(peli.mahdolliset_siirrot, peli.pelilauta)
 
-        self.assertTrue(paras_siirto == (5, 0) or paras_siirto == (4, 0))
+        self.assertTrue(paras_siirto == (4, 0))
