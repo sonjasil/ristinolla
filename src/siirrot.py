@@ -30,7 +30,6 @@ class Peli:
         voittaja = None
         while True:
             self.pelilauta.tulosta_ruudukko()
-            #print(self.mahdolliset_siirrot)
 
             while True:
                 rivi = input(("Valitse rivi 1-20: "))
@@ -144,19 +143,19 @@ class Peli:
         ruudut = self.pelilauta.ruudukko
 
         for i in range(rivi - 1, max(-1, rivi - 3), -1):
-            if ruudut[i][sarake] == EMPTY and ruudut[i][sarake] not in mahdolliset_siirrot:
+            if ruudut[i][sarake] == EMPTY and (i, sarake) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, sarake))
 
         for i in range(rivi + 1, min(20, rivi + 3)):
-            if ruudut[i][sarake] == EMPTY and ruudut[i][sarake] not in mahdolliset_siirrot:
+            if ruudut[i][sarake] == EMPTY and (i, sarake) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, sarake))
 
         for j in range(sarake - 1, max(-1, sarake - 3), -1):
-            if ruudut[rivi][j] == EMPTY and ruudut[rivi][j] not in mahdolliset_siirrot:
+            if ruudut[rivi][j] == EMPTY and (rivi, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((rivi, j))
 
         for j in range(sarake + 1, min(20, sarake + 3)):
-            if ruudut[rivi][j] == EMPTY and ruudut[rivi][j] not in mahdolliset_siirrot:
+            if ruudut[rivi][j] == EMPTY and (rivi, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((rivi, j))
 
         for k in range(1, 3):
@@ -164,7 +163,7 @@ class Peli:
             j = sarake - k
             if i < 0 or j < 0:
                 break
-            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+            if ruudut[i][j] == EMPTY and (i, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
@@ -172,7 +171,7 @@ class Peli:
             j = sarake + k
             if i > 19 or j > 19:
                 break
-            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+            if ruudut[i][j] == EMPTY and (i, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
@@ -180,7 +179,7 @@ class Peli:
             j = sarake + k
             if i < 0 or j > 19:
                 break
-            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+            if ruudut[i][j] == EMPTY and (i, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, j))
 
         for k in range(1, 3):
@@ -188,7 +187,7 @@ class Peli:
             j = sarake - k
             if i > 19 or j < 0:
                 break
-            if ruudut[i][j] == EMPTY and ruudut[i][j] not in mahdolliset_siirrot:
+            if ruudut[i][j] == EMPTY and (i, j) not in mahdolliset_siirrot:
                 mahdolliset_siirrot.append((i, j))
 
         if siirto in mahdolliset_siirrot:
