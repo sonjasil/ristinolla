@@ -340,9 +340,11 @@ class Peli:
         paras_siirto = choice(list(mahdolliset_siirrot))
 
         for siirto in mahdolliset_siirrot:
+            siirtolistan_kopio = mahdolliset_siirrot.copy()
+            self.etsi_mahdolliset_siirrot(siirto, siirtolistan_kopio)
             pelilauta.ruudukko[siirto[0]][siirto[1]] = COMPUTER
             siirron_arvo = \
-                self.alphabeta(-inf, inf, pelilauta, siirto, mahdolliset_siirrot, 2, False)
+                self.alphabeta(-inf, inf, pelilauta, siirto, siirtolistan_kopio, 2, False)
             pelilauta.ruudukko[siirto[0]][siirto[1]] = EMPTY
 
             if siirron_arvo > paras_arvo:
