@@ -30,6 +30,7 @@ class Peli:
         voittaja = None
         while True:
             self.pelilauta.tulosta_ruudukko()
+            print(self.mahdolliset_siirrot)
 
             while True:
                 rivi = input(("Valitse rivi 1-20: "))
@@ -296,17 +297,15 @@ class Peli:
 
     def alphabeta(self, alpha, beta, pelilauta, siirto, mahdolliset_siirrot, syvyys, maksimoi):
 
-        if self.etsi_voittajaa(siirto, PLAYER, pelilauta):
-            return -inf
-        if self.etsi_voittajaa(siirto, COMPUTER, pelilauta):
-            return inf
-        if syvyys == 0:
-            return self.arvioi_pelitilanne(pelilauta, siirto)
         if self.etsi_tasapeli(self.siirrot):
             return 0
+        if syvyys == 0:
+            return self.arvioi_pelitilanne(pelilauta, siirto)
 
 
         if maksimoi:
+            if self.etsi_voittajaa(siirto, PLAYER, pelilauta):
+                return -inf
             max_arvo = -inf
             for siirto_tuple in mahdolliset_siirrot:
                 siirtolistan_kopio = mahdolliset_siirrot.copy()
@@ -321,6 +320,8 @@ class Peli:
             return max_arvo
 
         else:
+            if self.etsi_voittajaa(siirto, COMPUTER, pelilauta):
+                return inf
             min_arvo = inf
             for siirto_tuple in mahdolliset_siirrot:
                 siirtolistan_kopio = mahdolliset_siirrot.copy()
